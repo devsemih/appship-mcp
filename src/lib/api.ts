@@ -1,6 +1,6 @@
 import { getApiKey } from "./credentials.js";
 
-const API_BASE_URL = process.env.APPSHIP_API_URL || "https://appship.up.railway.app";
+const API_BASE_URL = process.env.APPSHIP_API_URL || "https://appship.up.railway.app/api";
 
 export class ApiError extends Error {
   constructor(
