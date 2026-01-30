@@ -12,7 +12,7 @@ npx appship login
 claude mcp add appship -- npx appship
 ```
 
-Get your API key from [appship.dev/dashboard](https://appship.dev/dashboard)
+Get your API key from [appship.ai/dashboard](https://appship.ai/dashboard)
 
 ## Commands
 

@@ -18,7 +18,7 @@ function prompt(question: string): Promise<string> {
 
 export async function loginCommand(): Promise<void> {
   console.log("\n  Appship Login\n");
-  console.log("  Get your API key from: https://appship.dev/dashboard\n");
+  console.log("  Get your API key from: https://appship.ai/dashboard\n");
 
   const apiKey = await prompt("  API Key: ");
 
