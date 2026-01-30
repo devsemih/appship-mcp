@@ -1,0 +1,39 @@
+{
+  "name": "appship",
+  "version": "1.0.0",
+  "description": "Appship MCP server for Claude Code - AI-powered App Store optimization",
+  "main": "dist/index.js",
+  "bin": {
+    "appship-mcp": "./dist/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "appship",
+    "app-store",
+    "aso",
+    "cli"
+  ],
+  "author": "Appship",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appship/appship-mcp"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
