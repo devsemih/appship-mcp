@@ -84,7 +84,10 @@ export interface SubmitMetadataResponse {
   locale: string;
   localizationId: string;
   updatedFields: string[];
+  skippedFields: string[];
   isNewVersion: boolean;
+  isInitialRelease: boolean;
+  warnings: string[];
 }
 
 export interface GeneratedMetadata {
