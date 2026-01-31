@@ -30,6 +30,63 @@ export interface AppleApp {
   sku?: string;
 }
 
+export type AppStoreVersionState =
+  | 'ACCEPTED'
+  | 'DEVELOPER_REJECTED'
+  | 'IN_REVIEW'
+  | 'INVALID_BINARY'
+  | 'METADATA_REJECTED'
+  | 'PENDING_APPLE_RELEASE'
+  | 'PENDING_CONTRACT'
+  | 'PENDING_DEVELOPER_RELEASE'
+  | 'PREPARE_FOR_SUBMISSION'
+  | 'PREORDER_READY_FOR_SALE'
+  | 'PROCESSING_FOR_APP_STORE'
+  | 'READY_FOR_REVIEW'
+  | 'READY_FOR_SALE'
+  | 'REJECTED'
+  | 'REMOVED_FROM_SALE'
+  | 'WAITING_FOR_EXPORT_COMPLIANCE'
+  | 'WAITING_FOR_REVIEW'
+  | 'REPLACED_WITH_NEW_VERSION'
+  | 'NOT_APPLICABLE';
+
+export type AppStorePlatform = 'IOS' | 'MAC_OS' | 'TV_OS' | 'VISION_OS';
+
+export interface AppStoreVersion {
+  id: string;
+  versionString: string;
+  platform: AppStorePlatform;
+  appStoreState: AppStoreVersionState;
+  createdDate: string;
+}
+
+export interface GetAppVersionsResponse {
+  versions: AppStoreVersion[];
+  editableVersion: AppStoreVersion | null;
+  liveVersion: AppStoreVersion | null;
+}
+
+export interface SubmitMetadataOptions {
+  locale: string;
+  description?: string;
+  keywords?: string;
+  promotionalText?: string;
+  whatsNew?: string;
+  newVersionString?: string;
+  platform?: AppStorePlatform;
+}
+
+export interface SubmitMetadataResponse {
+  success: boolean;
+  versionId: string;
+  versionString: string;
+  locale: string;
+  localizationId: string;
+  updatedFields: string[];
+  isNewVersion: boolean;
+}
+
 export interface GeneratedMetadata {
   title: string;
   subtitle: string;
@@ -124,5 +181,19 @@ export async function generateKeywords(
   return request<{ keywords: string }>("/generate/keywords", {
     method: "POST",
     body: JSON.stringify({ appName, appDescription, currentKeywords, locale }),
+  });
+}
+
+export async function getAppVersions(appId: string): Promise<GetAppVersionsResponse> {
+  return request<GetAppVersionsResponse>(`/apps/${appId}/versions`);
+}
+
+export async function submitMetadata(
+  appId: string,
+  options: SubmitMetadataOptions
+): Promise<SubmitMetadataResponse> {
+  return request<SubmitMetadataResponse>(`/apps/${appId}/submit-metadata`, {
+    method: "POST",
+    body: JSON.stringify(options),
   });
 }

@@ -11,6 +11,8 @@ import {
   generateMetadata,
   generateWhatsNew,
   generateKeywords,
+  getAppVersions,
+  submitMetadata,
   ApiError,
 } from "./lib/api.js";
 
@@ -101,6 +103,63 @@ const TOOLS = [
         },
       },
       required: ["appName", "appDescription"],
+    },
+  },
+  {
+    name: "get_app_versions",
+    description: "Get all versions of an app from App Store Connect. Shows editable (PREPARE_FOR_SUBMISSION) and live (READY_FOR_SALE) versions. Free to use.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        appId: {
+          type: "string",
+          description: "The App Store Connect app ID",
+        },
+      },
+      required: ["appId"],
+    },
+  },
+  {
+    name: "submit_metadata",
+    description: "Submit metadata to App Store Connect for a specific locale. If app is live, provide newVersionString to create a new version. Keywords should be comma-separated. Costs 1 credit.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        appId: {
+          type: "string",
+          description: "The App Store Connect app ID",
+        },
+        locale: {
+          type: "string",
+          description: "Target locale (e.g., 'en-US', 'tr-TR')",
+        },
+        description: {
+          type: "string",
+          description: "App description",
+        },
+        keywords: {
+          type: "string",
+          description: "Keywords as comma-separated string (max 100 chars total)",
+        },
+        promotionalText: {
+          type: "string",
+          description: "Promotional text (max 170 chars)",
+        },
+        whatsNew: {
+          type: "string",
+          description: "What's New / Release notes (max 4000 chars)",
+        },
+        newVersionString: {
+          type: "string",
+          description: "New version number if app is live (e.g., '1.0.1', '1.1.0', '2.0.0')",
+        },
+        platform: {
+          type: "string",
+          enum: ["IOS", "MAC_OS", "TV_OS", "VISION_OS"],
+          description: "Target platform (defaults to IOS)",
+        },
+      },
+      required: ["appId", "locale"],
     },
   },
 ];
@@ -206,6 +265,49 @@ export async function startServer(): Promise<void> {
               {
                 type: "text" as const,
                 text: result.keywords,
+              },
+            ],
+          };
+        }
+
+        case "get_app_versions": {
+          const { appId } = args as { appId: string };
+          const versions = await getAppVersions(appId);
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify(versions, null, 2),
+              },
+            ],
+          };
+        }
+
+        case "submit_metadata": {
+          const { appId, locale, description, keywords, promotionalText, whatsNew, newVersionString, platform } = args as {
+            appId: string;
+            locale: string;
+            description?: string;
+            keywords?: string;
+            promotionalText?: string;
+            whatsNew?: string;
+            newVersionString?: string;
+            platform?: "IOS" | "MAC_OS" | "TV_OS" | "VISION_OS";
+          };
+          const result = await submitMetadata(appId, {
+            locale,
+            description,
+            keywords,
+            promotionalText,
+            whatsNew,
+            newVersionString,
+            platform,
+          });
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify(result, null, 2),
               },
             ],
           };
