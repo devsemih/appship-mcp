@@ -1,6 +1,6 @@
 {
   "name": "appship",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Appship MCP server for Claude Code - AI-powered App Store optimization",
   "main": "dist/index.js",
   "bin": {
