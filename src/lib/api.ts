@@ -158,10 +158,16 @@ export async function generateMetadata(
   appDescription: string,
   locale?: string
 ): Promise<GeneratedMetadata> {
-  return request<GeneratedMetadata>("/generate/metadata", {
+  const result = await request<GeneratedMetadata>("/generate/metadata", {
     method: "POST",
     body: JSON.stringify({ appName, appDescription, locale }),
   });
+
+  if (!result.title && !result.description) {
+    throw new ApiError(500, "API returned empty metadata. The AI generation may have failed. Please try again.");
+  }
+
+  return result;
 }
 
 export async function generateWhatsNew(
